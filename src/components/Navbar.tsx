@@ -10,11 +10,13 @@ export default function Navbar() {
         <Link
           to="/login"
           className="border-secondary border transition-colors rounded-md hover:bg-secondary hover:text-white inline-flex items-center justify-center py-2 px-5 text-center text-base font-medium text-secondary">
-          Login
+          Sign In
         </Link>
-        <button className="border-secondary border transition-colors rounded-md hover:bg-secondary hover:text-white inline-flex items-center justify-center py-2 px-5 text-center text-base font-medium text-secondary">
+        <Link
+          to="/register"
+          className="border-secondary border transition-colors rounded-md hover:bg-secondary hover:text-white inline-flex items-center justify-center py-2 px-5 text-center text-base font-medium text-secondary">
           Sign Up
-        </button>
+        </Link>
       </div>
     </div>
   );

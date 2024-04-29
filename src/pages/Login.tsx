@@ -9,7 +9,7 @@ export default function Login() {
         <div className="w-[30rem] overflow-hidden rounded-lg bg-white shadow-md pt-16 pb-8 px-10 text-center my-32">
           <div className="mb-10 text-center md:mb-16">
             <div className="mx-auto inline-block max-w-[160px]">
-              <h1 className="text-primary font-bold text-3xl">NutriFitPal</h1>
+              <h1 className="text-primary font-bold text-3xl">Sign In</h1>
             </div>
           </div>
           <form>
@@ -46,13 +46,14 @@ export default function Login() {
           <Link
             to="javascript:void(0)"
             className="inline-block mb-2 text-base text-primary hover:text-primary hover:underline">
-            Forget Password?
+            Lupa Kata Sandi?
           </Link>
           <p className="text-base text-secondary gap-2">
-            <span className="pr-0.5">Not a member yet?</span>
+            <span className="pr-0.5">Belum punya akun?</span>
             <Link
               to="javascript:void(0)"
               className="text-primary hover:underline">
+              {" "}
               Sign Up
             </Link>
           </p>
