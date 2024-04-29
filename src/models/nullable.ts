@@ -1,3 +1,1 @@
-export interface Nullable<T> {
-  value: T | null;
-}
+export type Nullable<T> = T | null;

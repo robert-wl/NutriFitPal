@@ -19,6 +19,10 @@ interface IRegisterForm {
 export default function Register() {
   const [registerForm, setRegisterForm] = useState<IRegisterForm>({} as IRegisterForm);
 
+  const handleRegister = async () => {
+    //
+  };
+
   return (
     <Layout>
       <div className="flex items-center justify-center w-full px-4">
@@ -36,6 +40,7 @@ export default function Register() {
               />
               <input
                 type="text"
+                onChange={(e) => setRegisterForm({ ...registerForm, username: e.target.value })}
                 placeholder="Username"
                 className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
               />
@@ -47,6 +52,7 @@ export default function Register() {
               />
               <input
                 type="text"
+                onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
                 placeholder="Email"
                 className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
               />
@@ -58,6 +64,7 @@ export default function Register() {
               />
               <input
                 type="password"
+                onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
                 placeholder="Password"
                 className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
               />
@@ -69,6 +76,7 @@ export default function Register() {
               />
               <input
                 type="password"
+                onChange={(e) => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })}
                 placeholder="Confirm Password"
                 className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
               />
@@ -81,6 +89,7 @@ export default function Register() {
                 />
                 <input
                   type="number"
+                  onChange={(e) => setRegisterForm({ ...registerForm, weight: parseInt(e.target.value) })}
                   placeholder="Weight"
                   className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
                 />
@@ -92,6 +101,7 @@ export default function Register() {
                 />
                 <input
                   type="number"
+                  onChange={(e) => setRegisterForm({ ...registerForm, height: parseInt(e.target.value) })}
                   placeholder="Height"
                   className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
                 />
@@ -130,11 +140,11 @@ export default function Register() {
               </div>
             </div>
             <div className="mb-10">
-              <input
-                type="submit"
-                value="Sign In"
-                className="w-full px-5 py-3 text-base font-medium text-white transition border rounded-md cursor-pointer border-primary bg-primary hover:bg-opacity-90"
-              />
+              <button
+                onClick={handleRegister}
+                className="w-full px-5 py-3 text-base font-medium text-white transition border rounded-md cursor-pointer border-primary bg-primary hover:bg-opacity-90">
+                Sign In
+              </button>
             </div>
           </form>
           <p className="text-base text-secondary gap-2">
