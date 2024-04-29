@@ -4,7 +4,8 @@ import { MdOutlineEmail, MdOutlineLock } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { TbWeight } from "react-icons/tb";
 import { PiRuler } from "react-icons/pi";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
+import { toast } from "react-toastify";
 
 interface IRegisterForm {
   username: string;
@@ -16,11 +17,57 @@ interface IRegisterForm {
   gender: string;
 }
 
-export default function Register() {
-  const [registerForm, setRegisterForm] = useState<IRegisterForm>({} as IRegisterForm);
+const defaultRegister = {
+  username: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  weight: 0,
+  height: 0,
+  gender: "",
+};
 
-  const handleRegister = async () => {
-    //
+export default function Register() {
+  const [registerForm, setRegisterForm] = useState<IRegisterForm>(defaultRegister);
+
+  const handleRegister = async (e: MouseEvent) => {
+    e.preventDefault();
+    console.log("hi")
+
+    if (registerForm.username === "") {
+      toast.error("Username is required");
+      return;
+    }
+    if (registerForm.email === "") {
+      toast.error("Email is required");
+      return;
+    }
+    if (registerForm.password === "") {
+      toast.error("Password is required");
+      return;
+    }
+    if (registerForm.confirmPassword === "") {
+      toast.error("Confirm Password is required");
+      return;
+    }
+    if (registerForm.password !== registerForm.confirmPassword) {
+      toast.error("Password and Confirm Password must be the same");
+      return;
+    }
+    if (registerForm.weight === 0) {
+      toast.error("Weight is required");
+      return;
+    }
+    if (registerForm.height === 0) {
+      toast.error("Height is required");
+      return;
+    }
+    if (registerForm.gender === "") {
+      toast.error("Gender is required");
+      return;
+    }
+
+    console.log("yay");
   };
 
   return (
