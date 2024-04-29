@@ -1,0 +1,63 @@
+import Layout from "../components/Layout.tsx";
+import { Link } from "react-router-dom";
+import { MdOutlineEmail, MdOutlineLock } from "react-icons/md";
+
+export default function Login() {
+  return (
+    <Layout>
+      <div className="flex items-center justify-center w-full px-4">
+        <div className="w-[30rem] overflow-hidden rounded-lg bg-white shadow-md pt-16 pb-8 px-10 text-center my-32">
+          <div className="mb-10 text-center md:mb-16">
+            <div className="mx-auto inline-block max-w-[160px]">
+              <h1 className="text-primary font-bold text-3xl">NutriFitPal</h1>
+            </div>
+          </div>
+          <form>
+            <div className="flex mb-6 px-5 py-3 gap-2 items-center border has-[:focus]:border-primary rounded-md">
+              <MdOutlineEmail
+                className="text-gray-400"
+                size="1.5rem"
+              />
+              <input
+                type="text"
+                placeholder="Email"
+                className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
+              />
+            </div>
+            <div className="flex mb-6 px-5 py-3 gap-2 items-center border has-[:focus]:border-primary rounded-md">
+              <MdOutlineLock
+                className="text-gray-400"
+                size="1.5rem"
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
+              />
+            </div>
+            <div className="mb-10">
+              <input
+                type="submit"
+                value="Sign In"
+                className="w-full px-5 py-3 text-base font-medium text-white transition border rounded-md cursor-pointer border-primary bg-primary hover:bg-opacity-90"
+              />
+            </div>
+          </form>
+          <Link
+            to="javascript:void(0)"
+            className="inline-block mb-2 text-base text-primary hover:text-primary hover:underline">
+            Forget Password?
+          </Link>
+          <p className="text-base text-secondary gap-2">
+            <span className="pr-0.5">Not a member yet?</span>
+            <Link
+              to="javascript:void(0)"
+              className="text-primary hover:underline">
+              Sign Up
+            </Link>
+          </p>
+        </div>
+      </div>
+    </Layout>
+  );
+}

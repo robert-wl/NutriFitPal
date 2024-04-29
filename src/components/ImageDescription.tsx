@@ -13,7 +13,7 @@ export default function ImageDescription({ direction = "right", src, alt, childr
   const flexDirection = direction === "left" ? "flex-row-reverse" : "flex-row";
 
   return (
-    <div className={`flex w-full flex-shrink-0 bg-white min-h-[100vh] items-center justify-between ${flexDirection} ${className}`}>
+    <div className={`flex w-full flex-shrink-0 bg-gray-50 min-h-[100vh] items-center justify-between ${flexDirection} ${className}`}>
       <img
         className="w-1/3 aspect-square h-fit rounded-lg object-cover"
         src={src}
