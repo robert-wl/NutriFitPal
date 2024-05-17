@@ -6,6 +6,7 @@ import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import { ToastContainer } from "react-toastify";
 import AuthContextProvider from "./components/providers/AuthProvider.tsx";
+import Protector from "./components/middleware/Protector.tsx";
 
 function App() {
   return (
@@ -19,11 +20,19 @@ function App() {
             />
             <Route
               path="/login"
-              element={<Login />}
+              element={
+                <Protector authenticated={false}>
+                  <Login />
+                </Protector>
+              }
             />
             <Route
               path="/register"
-              element={<Register />}
+              element={
+                <Protector authenticated={false}>
+                  <Register />
+                </Protector>
+              }
             />
           </Routes>
         </BrowserRouter>

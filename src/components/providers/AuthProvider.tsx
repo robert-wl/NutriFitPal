@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { UserData } from "../../models/firebase/UserData.ts";
+import { UserData } from "../../models/firebase/user-data.ts";
 import { Nullable } from "../../models/nullable.ts";
 import { UserService } from "../../services/UserService.ts";
 import FirebaseService from "../../services/FirebaseService.ts";
@@ -11,22 +11,26 @@ interface Props {
 
 interface AuthContextType {
   user: UserData | null;
+  isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => Promise<boolean>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,
+  isLoading: false,
   login: async () => true,
   logout: async () => true,
 });
 
 export default function AuthContextProvider({ children }: Props) {
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<Nullable<UserData>>(null);
 
   const login = async (email: string, password: string) => {
+    setIsLoading(true);
     const response = await UserService.login(email, password);
-
+    setIsLoading(false);
     if (response.error) {
       return false;
     }
@@ -36,8 +40,9 @@ export default function AuthContextProvider({ children }: Props) {
   };
 
   const logout = async () => {
+    setIsLoading(true);
     const response = await UserService.logout();
-
+    setIsLoading(false);
     if (response.error) {
       return false;
     }
@@ -47,9 +52,12 @@ export default function AuthContextProvider({ children }: Props) {
   };
 
   useEffect(() => {
+    setIsLoading(false);
     const unsubscribe = onAuthStateChanged(FirebaseService.auth, async (user) => {
       if (user) {
+        setIsLoading(true);
         const response = await UserService.getCurrentUser();
+        setIsLoading(false);
 
         if (response.error) {
           return;
@@ -73,6 +81,7 @@ export default function AuthContextProvider({ children }: Props) {
         user,
         login,
         logout,
+        isLoading,
       }}>
       {children}
     </AuthContext.Provider>

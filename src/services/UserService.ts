@@ -1,7 +1,7 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "@firebase/auth";
-import { UserData } from "../models/firebase/UserData";
+import { UserData } from "../models/firebase/user-data.ts";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { FirebaseResponse } from "../models/Response";
+import { FirebaseResponse } from "../models/response.ts";
 import FirebaseService from "./FirebaseService";
 
 export class UserService extends FirebaseService {
