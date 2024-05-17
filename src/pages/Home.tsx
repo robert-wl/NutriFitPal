@@ -1,7 +1,12 @@
 import Layout from "../components/Layout.tsx";
 import ImageDescription from "../components/ImageDescription.tsx";
+import useAuth from "../hooks/use-auth.ts";
 
 export default function Home() {
+  const { user } = useAuth();
+
+  console.log(user);
+
   return (
     <Layout>
       <ImageDescription

@@ -1,21 +1,12 @@
 import Layout from "../components/Layout.tsx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineEmail, MdOutlineLock } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { TbWeight } from "react-icons/tb";
 import { PiRuler } from "react-icons/pi";
-import { MouseEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
-
-interface IRegisterForm {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  weight: number;
-  height: number;
-  gender: string;
-}
+import { UserService } from "../services/UserService.ts";
 
 const defaultRegister = {
   username: "",
@@ -27,12 +18,14 @@ const defaultRegister = {
   gender: "",
 };
 
-export default function Register() {
-  const [registerForm, setRegisterForm] = useState<IRegisterForm>(defaultRegister);
+type RegisterForm = typeof defaultRegister;
 
-  const handleRegister = async (e: MouseEvent) => {
+export default function Register() {
+  const [registerForm, setRegisterForm] = useState<RegisterForm>(defaultRegister);
+  const navigate = useNavigate();
+
+  const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("hi")
 
     if (registerForm.username === "") {
       toast.error("Username is required");
@@ -67,7 +60,22 @@ export default function Register() {
       return;
     }
 
-    console.log("yay");
+    const response = await UserService.register(
+      registerForm.username,
+      registerForm.email,
+      registerForm.password,
+      registerForm.height,
+      registerForm.weight,
+      registerForm.gender,
+    );
+
+    if (response.error) {
+      toast.error(response.error);
+      return;
+    }
+
+    toast.success("Register success");
+    navigate(0);
   };
 
   return (
@@ -79,7 +87,7 @@ export default function Register() {
               <h1 className="text-primary font-bold text-3xl">Sign Up</h1>
             </div>
           </div>
-          <form>
+          <form onSubmit={handleRegister}>
             <div className="flex mb-6 px-5 py-3 gap-2 items-center border has-[:focus]:border-primary rounded-md">
               <FaRegUser
                 className="text-gray-400"
@@ -87,6 +95,7 @@ export default function Register() {
               />
               <input
                 type="text"
+                required
                 onChange={(e) => setRegisterForm({ ...registerForm, username: e.target.value })}
                 placeholder="Username"
                 className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
@@ -99,6 +108,7 @@ export default function Register() {
               />
               <input
                 type="text"
+                required
                 onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
                 placeholder="Email"
                 className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
@@ -111,6 +121,7 @@ export default function Register() {
               />
               <input
                 type="password"
+                required
                 onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
                 placeholder="Password"
                 className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
@@ -123,6 +134,7 @@ export default function Register() {
               />
               <input
                 type="password"
+                required
                 onChange={(e) => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })}
                 placeholder="Confirm Password"
                 className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
@@ -136,6 +148,7 @@ export default function Register() {
                 />
                 <input
                   type="number"
+                  required
                   onChange={(e) => setRegisterForm({ ...registerForm, weight: parseInt(e.target.value) })}
                   placeholder="Weight"
                   className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
@@ -148,6 +161,7 @@ export default function Register() {
                 />
                 <input
                   type="number"
+                  required
                   onChange={(e) => setRegisterForm({ ...registerForm, height: parseInt(e.target.value) })}
                   placeholder="Height"
                   className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
@@ -188,7 +202,7 @@ export default function Register() {
             </div>
             <div className="mb-10">
               <button
-                onClick={handleRegister}
+                type="submit"
                 className="w-full px-5 py-3 text-base font-medium text-white transition border rounded-md cursor-pointer border-primary bg-primary hover:bg-opacity-90">
                 Sign In
               </button>

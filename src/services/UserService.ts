@@ -1,0 +1,114 @@
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "@firebase/auth";
+import { UserData } from "../models/firebase/UserData";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { FirebaseResponse } from "../models/Response";
+import FirebaseService from "./FirebaseService";
+
+export class UserService extends FirebaseService {
+  public static async register(
+    username: string,
+    email: string,
+    password: string,
+    height: number,
+    weight: number,
+    gender: string,
+  ): Promise<FirebaseResponse<boolean>> {
+    try {
+      const authResponse = await createUserWithEmailAndPassword(this.auth, email, password);
+
+      const userData: UserData = {
+        uid: authResponse.user.uid,
+        email,
+        username,
+        height,
+        weight,
+        gender,
+        role: "user",
+      };
+
+      const docRef = doc(this.db, "users", userData.uid);
+
+      await setDoc(docRef, userData);
+
+      return {
+        data: true,
+      };
+    } catch (err: any) {
+      console.warn(err);
+      return {
+        error: err.message,
+      };
+    }
+  }
+
+  public static async login(email: string, password: string): Promise<FirebaseResponse<UserData>> {
+    try {
+      const response = await signInWithEmailAndPassword(this.auth, email, password);
+
+      const docRef = doc(this.db, "users", response.user.uid);
+
+      const data = await getDoc(docRef).then((doc) => doc.data());
+
+      if (!data) {
+        return {
+          error: "User not found",
+        };
+      }
+
+      return {
+        data: data as UserData,
+      };
+    } catch (err: any) {
+      console.warn(err);
+      return {
+        error: err.message,
+      };
+    }
+  }
+
+  public static async logout(): Promise<FirebaseResponse<boolean>> {
+    try {
+      await this.auth.signOut();
+
+      return {
+        data: true,
+      };
+    } catch (err: any) {
+      console.warn(err);
+      return {
+        error: err.message,
+      };
+    }
+  }
+
+  public static async getCurrentUser(): Promise<FirebaseResponse<UserData>> {
+    try {
+      const user = this.auth.currentUser;
+
+      if (!user) {
+        return {
+          error: "User not found",
+        };
+      }
+
+      const docRef = doc(this.db, "users", user.uid);
+
+      const data = await getDoc(docRef).then((doc) => doc.data());
+
+      if (!data) {
+        return {
+          error: "User not found",
+        };
+      }
+
+      return {
+        data: data as UserData,
+      };
+    } catch (err: any) {
+      console.warn(err);
+      return {
+        error: err.message,
+      };
+    }
+  }
+}
