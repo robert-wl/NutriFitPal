@@ -16,11 +16,8 @@ export default function Protector({ children, authenticated = false, redirectUrl
     return <></>;
   }
 
+  console.log(authenticated && !user, !authenticated && user, roles && user && !roles.includes(user.role));
   if (authenticated && !user) {
-    return <Navigate to={redirectUrl} />;
-  }
-
-  if (roles && user && !roles.includes(user.role)) {
     return <Navigate to={redirectUrl} />;
   }
 
@@ -28,6 +25,9 @@ export default function Protector({ children, authenticated = false, redirectUrl
     return <Navigate to={redirectUrl} />;
   }
 
-  console.log("kesini", authenticated, user);
+  if (roles && user && !roles.includes(user.role)) {
+    return <Navigate to={redirectUrl} />;
+  }
+  
   return <>{children}</>;
 }

@@ -32,7 +32,7 @@ export default function Login() {
   return (
     <Layout>
       <div className="flex items-center justify-center w-full px-4">
-        <div className="w-[30rem] overflow-hidden rounded-lg bg-white shadow-md pt-16 pb-8 px-10 text-center my-32">
+        <div className="w-[30rem] overflow-hidden rounded-lg bg-white shadow-md pt-16 pb-8 px-10 t  ext-center my-32">
           <div className="mb-10 text-center md:mb-16">
             <div className="mx-auto inline-block max-w-[160px]">
               <h1 className="text-primary font-bold text-3xl">Sign In</h1>

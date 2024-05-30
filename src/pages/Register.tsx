@@ -1,6 +1,6 @@
 import Layout from "../components/Layout.tsx";
 import { Link, useNavigate } from "react-router-dom";
-import { MdOutlineEmail, MdOutlineLock } from "react-icons/md";
+import { MdOutlineCake, MdOutlineEmail, MdOutlineLock } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { TbWeight } from "react-icons/tb";
 import { PiRuler } from "react-icons/pi";
@@ -13,6 +13,7 @@ const defaultRegister = {
   email: "",
   password: "",
   confirmPassword: "",
+  dateOfBirth: "",
   weight: 0,
   height: 0,
   gender: "",
@@ -47,6 +48,10 @@ export default function Register() {
       toast.error("Password and Confirm Password must be the same");
       return;
     }
+    if (registerForm.dateOfBirth === "") {
+      toast.error("Date of Birth is required");
+      return;
+    }
     if (registerForm.weight === 0) {
       toast.error("Weight is required");
       return;
@@ -64,6 +69,7 @@ export default function Register() {
       registerForm.username,
       registerForm.email,
       registerForm.password,
+      registerForm.dateOfBirth,
       registerForm.height,
       registerForm.weight,
       registerForm.gender,
@@ -140,6 +146,18 @@ export default function Register() {
                 className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
               />
             </div>
+            <div className="flex mb-6 px-5 py-3 gap-2 items-center border has-[:focus]:border-primary rounded-md">
+              <MdOutlineCake
+                className="text-gray-400"
+                size="1.5rem"
+              />
+              <input
+                type="date"
+                required
+                onChange={(e) => setRegisterForm({ ...registerForm, dateOfBirth: e.target.value })}
+                className="w-full text-base text-black bg-transparent outline-none border-stroke text-body-color"
+              />
+            </div>
             <div className="flex gap-4">
               <div className="flex mb-6 px-5 py-3 gap-2 items-center border has-[:focus]:border-primary rounded-md">
                 <TbWeight
@@ -204,7 +222,7 @@ export default function Register() {
               <button
                 type="submit"
                 className="w-full px-5 py-3 text-base font-medium text-white transition border rounded-md cursor-pointer border-primary bg-primary hover:bg-opacity-90">
-                Sign In
+                Sign Up
               </button>
             </div>
           </form>

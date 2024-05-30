@@ -1,14 +1,15 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "@firebase/auth";
-import { UserData } from "../models/firebase/user-data.ts";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, orderBy, query, setDoc } from "firebase/firestore";
 import { FirebaseResponse } from "../models/response.ts";
 import FirebaseService from "./FirebaseService";
+import { UserData } from "../models/firebase/user-data.ts";
 
 export class UserService extends FirebaseService {
   public static async register(
     username: string,
     email: string,
     password: string,
+    dateOfBirth: string,
     height: number,
     weight: number,
     gender: string,
@@ -20,6 +21,7 @@ export class UserService extends FirebaseService {
         uid: authResponse.user.uid,
         email,
         username,
+        dateOfBirth,
         height,
         weight,
         gender,
@@ -103,6 +105,63 @@ export class UserService extends FirebaseService {
 
       return {
         data: data as UserData,
+      };
+    } catch (err: any) {
+      console.warn(err);
+      return {
+        error: err.message,
+      };
+    }
+  }
+
+  public static async updateUser(userData: UserData): Promise<FirebaseResponse<boolean>> {
+    try {
+      const docRef = doc(this.db, "users", userData.uid);
+
+      await setDoc(docRef, userData);
+
+      return {
+        data: true,
+      };
+    } catch (err: any) {
+      console.warn(err);
+      return {
+        error: err.message,
+      };
+    }
+  }
+
+  public static async getAllUsers(): Promise<FirebaseResponse<UserData[]>> {
+    try {
+      const collectionRef = query(collection(this.db, "users"), orderBy("role"));
+
+      const response = await getDocs(collectionRef);
+
+      const data: UserData[] = [];
+
+      response.forEach((doc) => {
+        data.push(doc.data() as UserData);
+      });
+
+      return {
+        data,
+      };
+    } catch (err: any) {
+      console.warn(err);
+      return {
+        error: err.message,
+      };
+    }
+  }
+
+  public static async setUserRole(uid: string, role: string): Promise<FirebaseResponse<boolean>> {
+    try {
+      const docRef = doc(this.db, "users", uid);
+
+      await setDoc(docRef, { role }, { merge: true });
+
+      return {
+        data: true,
       };
     } catch (err: any) {
       console.warn(err);

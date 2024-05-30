@@ -7,6 +7,10 @@ import Register from "./pages/Register.tsx";
 import { ToastContainer } from "react-toastify";
 import AuthContextProvider from "./components/providers/AuthProvider.tsx";
 import Protector from "./components/middleware/Protector.tsx";
+import Search from "./pages/Search.tsx";
+import Calculate from "./pages/Calculate.tsx";
+import Profile from "./pages/Profile.tsx";
+import ManageUser from "./pages/ManageUser.tsx";
 
 function App() {
   return (
@@ -31,6 +35,46 @@ function App() {
               element={
                 <Protector authenticated={false}>
                   <Register />
+                </Protector>
+              }
+            />
+            <Route
+              path="/search"
+              element={
+                <Protector
+                  authenticated
+                  roles={["user", "admin"]}>
+                  <Search />
+                </Protector>
+              }
+            />
+            <Route
+              path="/calculate"
+              element={
+                <Protector
+                  authenticated
+                  roles={["user", "admin"]}>
+                  <Calculate />
+                </Protector>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <Protector
+                  authenticated
+                  roles={["user", "admin"]}>
+                  <Profile />
+                </Protector>
+              }
+            />
+            <Route
+              path="/manage-user"
+              element={
+                <Protector
+                  authenticated
+                  roles={["admin"]}>
+                  <ManageUser />
                 </Protector>
               }
             />
