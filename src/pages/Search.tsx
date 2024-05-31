@@ -31,6 +31,7 @@ export default function Search() {
     }
 
     const response = await FoodService.getFoodByName(search);
+    console.log(response)
     setFoods(response);
   };
 

@@ -1,13 +1,13 @@
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCXkDnUhQkZXIrML7TrY9kKeNn4MuBUjR4",
-  authDomain: "nutrifitpal-a3226.firebaseapp.com",
-  projectId: "nutrifitpal-a3226",
-  storageBucket: "nutrifitpal-a3226.appspot.com",
-  messagingSenderId: "875250736381",
-  appId: "1:875250736381:web:bd9327d09454a3db783294",
-  measurementId: "G-2Y6PK2QFKQ",
+  apiKey: "AIzaSyBzRFzmJ8xifezt1VRZr7J0Ki8neEvKHfo",
+  authDomain: "temp-375e3.firebaseapp.com",
+  projectId: "temp-375e3",
+  storageBucket: "temp-375e3.appspot.com",
+  messagingSenderId: "785820788315",
+  appId: "1:785820788315:web:cdd765ef9d49729eb9417e",
+  measurementId: "G-X6476HN3R6"
 };
 
 export const firebaseApp = initializeApp(firebaseConfig);

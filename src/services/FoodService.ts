@@ -1,5 +1,5 @@
 import FirebaseService from "./FirebaseService.ts";
-import { addDoc, collection, doc, getDocs, limit, query, setDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, endAt, getDocs, limit, orderBy, query, setDoc, startAt, where } from "firebase/firestore";
 import HistoryService from "./HistoryService.ts";
 import { Nullable } from "../models/nullable.ts";
 import { UserHistory } from "../models/firebase/user-history.ts";
@@ -60,36 +60,60 @@ export default class FoodService extends FirebaseService {
     try {
       const breakfastQ = query(
         collection(this.db, "foods"),
-        where("calorie", ">=", calorie.breakfast.calorieStart),
-        where("calorie", "<=", calorie.breakfast.calorieEnd),
-        limit(2),
+        where("calories", ">=", calorie.breakfast.calorieStart),
+        where("calories", "<=", calorie.breakfast.calorieEnd),
+        limit(50),
       );
 
       const lunchQ = query(
         collection(this.db, "foods"),
-        where("calorie", ">=", calorie.lunch.calorieStart),
-        where("calorie", "<=", calorie.lunch.calorieEnd),
-        limit(2),
+        where("calories", ">=", calorie.lunch.calorieStart),
+        where("calories", "<=", calorie.lunch.calorieEnd),
+        limit(50),
       );
 
       const dinnerQ = query(
         collection(this.db, "foods"),
-        where("calorie", ">=", calorie.dinner.calorieStart),
-        where("calorie", "<=", calorie.dinner.calorieEnd),
-        limit(2),
+        where("calories", ">=", calorie.dinner.calorieStart),
+        where("calories", "<=", calorie.dinner.calorieEnd),
+        limit(50),
       );
 
       const breakfastSnapshot = await getDocs(breakfastQ);
       const lunchSnapshot = await getDocs(lunchQ);
       const dinnerSnapshot = await getDocs(dinnerQ);
 
+      const breakfast: Food[] = [];
+      const lunch: Food[] = [];
+      const dinner: Food[] = [];
+
+
+      //randomize
+
+      for(let i = 0; i < 2 && breakfastSnapshot.docs.length > 0; i++) {
+        const j = Math.floor(Math.random() * breakfastSnapshot.docs.length - 2);
+        breakfast.push({ id: breakfastSnapshot.docs[j].id, ...breakfastSnapshot.docs[j].data() } as Food);
+      }
+
+      for(let i = 0; i < 2 && lunchSnapshot.docs.length > 0; i++) {
+        const j = Math.floor(Math.random() * lunchSnapshot.docs.length - 2);
+        lunch.push({ id: lunchSnapshot.docs[j].id, ...lunchSnapshot.docs[j].data() } as Food);
+      }
+
+      for(let i = 0; i < 2 && dinnerSnapshot.docs.length > 0; i++) {
+        const j = Math.floor(Math.random() * dinnerSnapshot.docs.length - 2);
+        dinner.push({ id: dinnerSnapshot.docs[j].id, ...dinnerSnapshot.docs[j].data() } as Food);
+      }
+
+      console.log(breakfast, lunch, dinner)
+      //eslint-disable-next-line
+      //@ts-ignore
       const userSearch: UserHistory = {
-        id: undefined,
         userUid: uid,
         calorie,
-        breakfastFood: breakfastSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as Food),
-        lunchFood: lunchSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as Food),
-        dinnerFood: dinnerSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as Food),
+        breakfastFood: breakfast,
+        lunchFood: lunch,
+        dinnerFood: dinner,
       };
 
       await HistoryService.saveHistory(userSearch);
@@ -103,9 +127,11 @@ export default class FoodService extends FirebaseService {
 
   public static async getFoodByName(name: string): Promise<Food[]> {
     try {
-      const q = query(collection(this.db, "foods"), where("name", "array-contains-any", name.split("")));
+      console.log(name)
+      const q = query(collection(this.db, "foods"), orderBy('title'), startAt(name), endAt(name + "\uf8ff"), limit(20));
       const foodSnapshot = await getDocs(q);
 
+      console.log(foodSnapshot)
       const food: Food[] = [];
 
       foodSnapshot.docs.forEach((doc) => {

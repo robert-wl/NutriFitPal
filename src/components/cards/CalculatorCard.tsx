@@ -1,14 +1,17 @@
 import useAuth from "../../hooks/use-auth.ts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import calorieCalculator from "../../utils/calorie/calorie-calculator.ts";
 import { UserCalorie } from "../../models/firebase/user-calorie.ts";
 import { UserData } from "../../models/firebase/user-data.ts";
+import { UserHistory } from "../../models/firebase/user-history.ts";
+import { Nullable } from "../../models/nullable.ts";
 
 interface Props {
   getData: (calorie: UserCalorie) => void;
+  data: Nullable<UserHistory>;
 }
 
-export default function CalculatorCard({ getData }: Props) {
+export default function CalculatorCard({ getData, data }: Props) {
   const { user, updateUser } = useAuth();
   const [height, setHeight] = useState(user?.height ?? 0);
   const [weight, setWeight] = useState(user?.weight ?? 0);
@@ -27,11 +30,16 @@ export default function CalculatorCard({ getData }: Props) {
     await updateUser(newUser);
   };
 
-  const handleGetData = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleGetData = async (e: Nullable<React.FormEvent<HTMLFormElement>>) => {
+    e?.preventDefault();
+    console.log("CALLED")
     const calorie = calorieCalculator(weight, height, currentAge, user?.gender ?? "");
     getData(calorie);
   };
+
+  useEffect(() => {
+    handleGetData(null)
+  }, []);
 
   return (
     <div className="flex gap-10">
@@ -76,26 +84,18 @@ export default function CalculatorCard({ getData }: Props) {
       </form>
       <form
         onSubmit={handleGetData}
-        className="grid flex-1 rounded-lg bg-white border">
-        <div className="p-5 space-y-3">
+        className="flex flex-col flex-1 rounded-lg bg-white border">
+        <div className="p-5 space-y-3 h-fit">
           <h3 className="flex items-end text-4xl gap-4 font-bold text-secondary text-start">Calculator</h3>
         </div>
         <hr className="border-gray-300" />
         <div className="p-5 space-y-3">
-          <label className="flex items-center gap-4 text-lg text-secondary">
-            <span className="min-w-20 text-start">Calories</span>
-            <span className="ps-3 text-start">2,000 - 500,000 / day</span>
-          </label>
-          <label className="flex items-center gap-4 text-lg text-secondary">
-            <span className="min-w-20 text-start">Protein</span>
-            <span className="ps-3 text-start">50 - 2000000 / day</span>
-          </label>
-          <label className="flex items-center gap-4 text-lg text-secondary">
-            <span className="min-w-20 text-start">Fat</span>
-            <span className="ps-3 text-start">50 - 500000 / day</span>
+          <label className="flex flex-col gap-4 text-lg text-secondary">
+            <span className="min-w-20 text-start">Required Calories:</span>
+            <span className="ps-3 text-start">{data?.calorie.dayCalorie.toFixed(2)} / day</span>
           </label>
         </div>
-        <div className="relative">
+        <div className="h-full relative">
           <button
             type="submit"
             className="absolute end-2.5 bottom-2 font-medium text-white transition border rounded-md cursor-pointer border-primary bg-primary hover:bg-opacity-90 text-sm px-4 py-2">

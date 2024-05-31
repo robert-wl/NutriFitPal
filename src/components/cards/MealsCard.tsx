@@ -13,7 +13,7 @@ export default function MealsCard({ title, start, end, foods }: Props) {
       <div className="p-5 space-y-3">
         <h3 className="flex items-end text-4xl gap-4 font-bold text-gray-900 text-start">{title}</h3>
         <p className="flex items-start text-lg">
-          Recommended: {start} - {end} Calories
+          Recommended: {start.toFixed(2)} - {end.toFixed(2)} Calories
         </p>
       </div>
       <hr className="border-gray-300" />
@@ -23,16 +23,16 @@ export default function MealsCard({ title, start, end, foods }: Props) {
             key={food.title}
             className="gap-10 flex">
             <img
-              className="rounded-lg w-64 h-64"
-              src="https://picsum.photos/200/300"
+              className="rounded-lg w-64 h-64 object-cover"
+              src={food.image}
               alt="food"
             />
             <div className="flex flex-col justify-center py-5 text-start space-y-5">
               <h3 className="text-4xl font-bold text-gray-900">{food.title}</h3>
               <div>
-                <p className="text-lg text-gray-500">Calories: {food.calories} / serving</p>
-                <p className="text-lg text-gray-500">Protein: {food.protein} / serving</p>
-                <p className="text-lg text-gray-500">Fat: {food.fat} / serving</p>
+                <p className="text-lg text-gray-500">Calories: {food.calories.toFixed(2)} / serving</p>
+                <p className="text-lg text-gray-500">Protein: {food.protein.toFixed(2)} / serving</p>
+                <p className="text-lg text-gray-500">Fat: {food.fat.toFixed(2)} / serving</p>
               </div>
             </div>
           </div>

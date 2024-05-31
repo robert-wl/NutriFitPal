@@ -100,17 +100,7 @@ export default function AuthContextProvider({ children }: Props) {
   return (
     <AuthContext.Provider
       value={{
-        user:
-          {
-            email: "obet",
-            username: "obet",
-            dateOfBirth: "10-22-2023",
-            height: 1,
-            weight: 1,
-            gender: "obet",
-            role: "admin",
-            uid: "a1112312321",
-          } || user,
+        user: user,
         login,
         logout,
         updateUser,

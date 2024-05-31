@@ -1,7 +1,7 @@
 import Layout from "../components/Layout.tsx";
 import MealsCard from "../components/cards/MealsCard.tsx";
 import CalculatorCard from "../components/cards/CalculatorCard.tsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FoodService from "../services/FoodService.ts";
 import useAuth from "../hooks/use-auth.ts";
 import { Nullable } from "../models/nullable.ts";
@@ -10,7 +10,7 @@ import { UserCalorie } from "../models/firebase/user-calorie.ts";
 
 export default function Calculate() {
   const { user } = useAuth();
-  const [data, setData] = useState<Nullable<UserHistory>>();
+  const [data, setData] = useState<Nullable<UserHistory>>(null);
 
   const getData = async (calorie: UserCalorie) => {
     if (!user) {
@@ -21,10 +21,11 @@ export default function Calculate() {
     setData(response!);
   };
 
+
   return (
     <Layout>
       <div className="grid gap-5 py-5 mx-32">
-        <CalculatorCard getData={getData} />
+        <CalculatorCard getData={getData} data={data} />
         <MealsCard
           title="Breakfast"
           start={data?.calorie.breakfast.calorieStart || 0}

@@ -14,12 +14,12 @@ export default function calorieCalculator(weight: number, height: number, age: n
   return {
     dayCalorie,
     breakfast: {
-      calorieStart: dayCalorie * 0.2,
-      calorieEnd: dayCalorie * 0.25,
+      calorieStart: dayCalorie * 0.25,
+      calorieEnd: dayCalorie * 0.30,
     },
     lunch: {
-      calorieStart: dayCalorie * 0.3,
-      calorieEnd: dayCalorie * 0.35,
+      calorieStart: dayCalorie * 0.4,
+      calorieEnd: dayCalorie * 0.5,
     },
     dinner: {
       calorieStart: dayCalorie * 0.3,
