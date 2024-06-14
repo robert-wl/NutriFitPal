@@ -37,7 +37,7 @@ export default function CalculatorCard({ getData, data }: Props) {
   };
 
   useEffect(() => {
-    handleGetData(null);
+    handleGetData(null).then();
   }, []);
 
   return (

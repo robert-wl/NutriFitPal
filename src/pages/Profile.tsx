@@ -22,7 +22,7 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    getUserHistory();
+    getUserHistory().then();
   }, []);
 
   return (

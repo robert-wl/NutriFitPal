@@ -8,7 +8,7 @@ export default function Test() {
     for (const dat of dataset) {
       dat.title = (dat.title as string).toLowerCase();
       console.log("SEEDING", dat);
-      FoodService.addFood(dat);
+      FoodService.addFood(dat).then();
     }
   };
 
