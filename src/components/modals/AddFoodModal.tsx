@@ -1,25 +1,34 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, MouseEvent, useState } from "react";
 import { IoMdAdd, IoMdClose } from "react-icons/io";
-import FoodService from "../../services/FoodService.ts";
 import { Food } from "../../models/firebase/food.ts";
+import FoodService from "../../services/FoodService.ts";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   handleClose: () => void;
 }
 
 export const AddFoodModal = forwardRef<HTMLDialogElement, Props>(({ handleClose }, ref) => {
+  const navigate = useNavigate();
   const [food, setFood] = useState<Food>({
-    id: "",
     sodium: 0,
     title: "",
     image: "",
     calories: 0,
     protein: 0,
     fat: 0,
+    randomizer: 0,
   });
-  const handleSubmit = () => {
-    FoodService.addFood(food);
+  const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    food.title = food.title.toLowerCase().trim();
+    food.randomizer = Math.floor(Math.random() * 1000);
+
+    await FoodService.addFood(food);
+    navigate(0);
   };
+
   return (
     <dialog
       ref={ref}
@@ -121,7 +130,7 @@ export const AddFoodModal = forwardRef<HTMLDialogElement, Props>(({ handleClose 
         </div>
         <div className="flex w-full justify-center items-center space-x-2">
           <button
-            onClick={() => handleSubmit()}
+            onClick={handleSubmit}
             className="m-0.5 max-w-40 px-4 gap-2 flex items-center justify-center font-bold ms-3 text-white transition border rounded-md cursor-pointer border-primary bg-primary hover:bg-opacity-90 text-md py-2">
             <IoMdAdd size="1.25rem" />
             Add Item

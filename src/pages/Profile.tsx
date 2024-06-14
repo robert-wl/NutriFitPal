@@ -1,14 +1,20 @@
 import Layout from "../components/Layout.tsx";
 import useAuth from "../hooks/use-auth.ts";
 import { PiUserCircleLight } from "react-icons/pi";
-import HistoryDropdowns from "../components/dropdowns/HistoryDropdowns.tsx";
+import HistoryDropdown from "../components/dropdowns/HistoryDropdown.tsx";
 import { useEffect, useState } from "react";
 import HistoryService from "../services/HistoryService.ts";
 import { UserHistory } from "../models/firebase/user-history.ts";
+import Pagination from "../components/Pagination.tsx";
+import { Nullable } from "../types/nullable.ts";
+import HistoryDropdownSkeleton from "../components/skeletons/dropdowns/HistoryDropdownSkeleton.tsx";
 
 export default function Profile() {
-  const [histories, setHistories] = useState<UserHistory[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [histories, setHistories] = useState<Nullable<UserHistory[]>>(null);
   const { user } = useAuth();
+
+  const totalPage = Math.ceil((histories?.length ?? 0) / 10);
 
   const getUserHistory = async () => {
     const userHistories = await HistoryService.getUserHistory(user?.uid || "");
@@ -57,12 +63,21 @@ export default function Profile() {
               </div>
             </div>
           </div>
-          {histories.map((history) => (
-            <HistoryDropdowns history={history} />
-          ))}
+          {histories
+            ? histories.slice((currentPage - 1) * 10, currentPage * 10).map((history) => (
+                <HistoryDropdown
+                  key={history.id}
+                  history={history}
+                />
+              ))
+            : Array.from({ length: 10 }).map(() => <HistoryDropdownSkeleton />)}
         </div>
+        <Pagination
+          currentPage={currentPage}
+          maxPage={totalPage}
+          changePage={setCurrentPage}
+        />
       </Layout>
-      ;
     </>
   );
 }

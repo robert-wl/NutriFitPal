@@ -4,11 +4,11 @@ import calorieCalculator from "../../utils/calorie/calorie-calculator.ts";
 import { UserCalorie } from "../../models/firebase/user-calorie.ts";
 import { UserData } from "../../models/firebase/user-data.ts";
 import { UserHistory } from "../../models/firebase/user-history.ts";
-import { Nullable } from "../../models/nullable.ts";
+import { Nullable } from "../../types/nullable.ts";
 
 interface Props {
   getData: (calorie: UserCalorie) => void;
-  data: Nullable<UserHistory>;
+  data: Nullable<Omit<UserHistory, "id">>;
 }
 
 export default function CalculatorCard({ getData, data }: Props) {
@@ -32,13 +32,12 @@ export default function CalculatorCard({ getData, data }: Props) {
 
   const handleGetData = async (e: Nullable<React.FormEvent<HTMLFormElement>>) => {
     e?.preventDefault();
-    console.log("CALLED")
     const calorie = calorieCalculator(weight, height, currentAge, user?.gender ?? "");
     getData(calorie);
   };
 
   useEffect(() => {
-    handleGetData(null)
+    handleGetData(null);
   }, []);
 
   return (
@@ -92,7 +91,9 @@ export default function CalculatorCard({ getData, data }: Props) {
         <div className="p-5 space-y-3">
           <label className="flex flex-col gap-4 text-lg text-secondary">
             <span className="min-w-20 text-start">Required Calories:</span>
-            <span className="ps-3 text-start">{data?.calorie.dayCalorie.toFixed(2)} / day</span>
+            <div className="ps-3 text-start p-3 border w-fit min-w-40">
+              <span className="font-bold">{data?.calorie.dayCalorie.toFixed(2) ?? "Calculating..."}</span> calories / day
+            </div>
           </label>
         </div>
         <div className="h-full relative">

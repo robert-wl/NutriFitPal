@@ -3,7 +3,7 @@ import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { UserHistory } from "../models/firebase/user-history.ts";
 
 export default class HistoryService extends FirebaseService {
-  public static async saveHistory(history: UserHistory) {
+  public static async saveHistory(history: Omit<UserHistory, "id">) {
     try {
       const historyRef = collection(this.db, "history");
       await addDoc(historyRef, history);

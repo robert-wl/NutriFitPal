@@ -2,6 +2,7 @@ import useAuth from "../../hooks/use-auth.ts";
 import { useState } from "react";
 import FoodService from "../../services/FoodService.ts";
 import { Food } from "../../models/firebase/food.ts";
+import { handleImageError } from "../../utils/images.ts";
 
 interface Props {
   food: Food;
@@ -39,6 +40,7 @@ export default function FoodCard({ food }: Props) {
       <div className="flex-shrink-0">
         <img
           className="rounded-lg w-64 h-64 object-cover"
+          onError={handleImageError}
           src={foodValue.image}
           alt="food"
         />
@@ -53,53 +55,67 @@ export default function FoodCard({ food }: Props) {
       </div>
       <div className="flex flex-col justify-center py-5 text-start space-y-5">
         {isEditing ? (
-          <input
-            className="text-4xl font-bold text-gray-900 border rounded-lg"
-            type="text"
-            value={foodValue.title}
-            onChange={(e) => setFoodValue({ ...foodValue, title: e.target.value })}
-          />
+          <div className="text-2xl flex items-center gap-5">
+            <span className="w-24">Title:</span>
+            <textarea
+              className="text-4xl font-bold p-2 w-[50rem] max-w-[80%] text-gray-900 border rounded-lg capitalize"
+              value={foodValue.title}
+              onChange={(e) => setFoodValue({ ...foodValue, title: e.target.value })}
+            />
+          </div>
         ) : (
-          <h3 className="text-4xl font-bold text-gray-900">{foodValue.title}</h3>
+          <h3 className="text-4xl font-bold max-w-[80%] text-gray-900 capitalize">{foodValue.title}</h3>
         )}
         <div className="flex flex-col gap-2">
           {isEditing ? (
-            <input
-              className="text-lg text-gray-500 border rounded-lg"
-              type="text"
-              value={foodValue.calories}
-              onChange={(e) => setFoodValue({ ...foodValue, calories: Number(e.target.value) })}
-            />
+            <div className="text-2xl flex items-center gap-5">
+              <span className="w-24">Calories:</span>
+              <input
+                className="text-lg text-gray-500 p-2 w-fit border rounded-lg"
+                type="text"
+                value={foodValue.calories}
+                onChange={(e) => setFoodValue({ ...foodValue, calories: Number(e.target.value) })}
+              />
+            </div>
           ) : (
             <p className="text-lg text-gray-500">Calories: {foodValue.calories} / serving</p>
           )}
           {isEditing ? (
-            <input
-              className="text-lg text-gray-500 border rounded-lg"
-              type="text"
-              value={foodValue.protein}
-              onChange={(e) => setFoodValue({ ...foodValue, protein: Number(e.target.value) })}
-            />
+            <div className="text-2xl flex items-center gap-5">
+              <span className="w-24">Protein:</span>
+              <input
+                className="text-lg text-gray-500 p-2 w-fit border rounded-lg"
+                type="text"
+                value={foodValue.protein}
+                onChange={(e) => setFoodValue({ ...foodValue, protein: Number(e.target.value) })}
+              />
+            </div>
           ) : (
             <p className="text-lg text-gray-500">Protein: {foodValue.protein} / serving</p>
           )}
           {isEditing ? (
-            <input
-              className="text-lg text-gray-500 border rounded-lg"
-              type="text"
-              value={foodValue.fat}
-              onChange={(e) => setFoodValue({ ...foodValue, fat: Number(e.target.value) })}
-            />
+            <div className="text-2xl flex items-center gap-5">
+              <span className="w-24">Fat:</span>
+              <input
+                className="text-lg text-gray-500 p-2 w-fit border rounded-lg"
+                type="text"
+                value={foodValue.fat}
+                onChange={(e) => setFoodValue({ ...foodValue, fat: Number(e.target.value) })}
+              />
+            </div>
           ) : (
             <p className="text-lg text-gray-500">Fat: {foodValue.fat} / serving</p>
           )}
           {isEditing ? (
-            <input
-              className="text-lg text-gray-500 border rounded-lg"
-              type="text"
-              value={foodValue.sodium}
-              onChange={(e) => setFoodValue({ ...foodValue, sodium: Number(e.target.value) })}
-            />
+            <div className="text-2xl flex items-center gap-5">
+              <span className="w-24">Sodium:</span>
+              <input
+                className="text-lg text-gray-500 p-2 w-fit border rounded-lg"
+                type="text"
+                value={foodValue.sodium}
+                onChange={(e) => setFoodValue({ ...foodValue, sodium: Number(e.target.value) })}
+              />
+            </div>
           ) : (
             <p className="text-lg text-gray-500">Sodium: {foodValue.sodium} / serving</p>
           )}

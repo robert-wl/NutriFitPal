@@ -10,11 +10,7 @@ interface Props {
 }
 
 export default function Protector({ children, authenticated = false, redirectUrl = "/", roles = [] }: Props) {
-  const { user, isLoading } = useAuth();
-
-  if (isLoading) {
-    return <></>;
-  }
+  const { user } = useAuth();
 
   console.log(authenticated && !user, !authenticated && user, roles && user && !roles.includes(user.role));
   if (authenticated && !user) {
@@ -28,6 +24,6 @@ export default function Protector({ children, authenticated = false, redirectUrl
   if (roles && user && !roles.includes(user.role)) {
     return <Navigate to={redirectUrl} />;
   }
-  
+
   return <>{children}</>;
 }

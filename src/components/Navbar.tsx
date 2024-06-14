@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import useAuth from "../hooks/use-auth.ts";
 import { useState } from "react";
 import { PiUserCircleLight } from "react-icons/pi";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -10,7 +11,6 @@ export default function Navbar() {
   const handleLogout = async () => {
     await logout();
   };
-
 
   return (
     <div className="flex justify-between bg-white items-center px-8 py-4 sticky top-0 shadow-md z-[1000]">
@@ -29,15 +29,13 @@ export default function Navbar() {
             className="transition-colors border-b-2 border-b-transparent hover:border-b-primary inline-flex items-center justify-center py-2 px-5 text-center text-base font-medium text-secondary">
             Calculate
           </Link>
-          {
-              user?.role === "admin" && (
-                <Link
-                to="/manage-user"
-                className="transition-colors border-b-2 border-b-transparent hover:border-b-primary inline-flex items-center justify-center py-2 px-5 text-center text-base font-medium text-secondary">
-                Admin
-              </Link>
-              )
-            }
+          {user?.role === "admin" && (
+            <Link
+              to="/manage-user"
+              className="transition-colors border-b-2 border-b-transparent hover:border-b-primary inline-flex items-center justify-center py-2 px-5 text-center text-base font-medium text-secondary">
+              Admin
+            </Link>
+          )}
         </div>
       )}
       <div className="space-x-5 z-[1000]">
@@ -50,23 +48,29 @@ export default function Navbar() {
                 size="3rem"
               />
             </div>
-            {showDropdown && (
-              <div className="absolute right-5 top-16 px-5 pb-2 pt-5 space-y-5 border rounded-md shadow-lg bg-white z-[1000]">
-                <div className="flex flex-col items-end gap-0">
-                  <span>Hello,</span>
-                  <Link
-                    to="/profile"
-                    className="text-primary">
-                    <span className="font-bold">{user.username}</span>
-                  </Link>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="w-full border-secondary border transition-colors rounded-md hover:bg-secondary hover:text-white inline-flex items-center justify-center py-2 px-5 text-center text-base font-medium text-secondary">
-                  Logout
-                </button>
-              </div>
-            )}
+            <AnimatePresence>
+              {showDropdown && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute right-5 top-16 px-5 pb-2 pt-5 space-y-5 border rounded-md shadow-lg bg-white z-[1000]">
+                  <div className="flex flex-col items-end gap-0">
+                    <span>Hello,</span>
+                    <Link
+                      to="/profile"
+                      className="text-primary">
+                      <span className="font-bold">{user.username}</span>
+                    </Link>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full border-secondary border transition-colors rounded-md hover:bg-secondary hover:text-white inline-flex items-center justify-center py-2 px-5 text-center text-base font-medium text-secondary">
+                    Logout
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </>
         ) : (
           <>
@@ -80,7 +84,6 @@ export default function Navbar() {
               className="border-secondary border transition-colors rounded-md hover:bg-secondary hover:text-white inline-flex items-center justify-center py-2 px-5 text-center text-base font-medium text-secondary">
               Sign Up
             </Link>
-         
           </>
         )}
       </div>

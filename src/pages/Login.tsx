@@ -81,7 +81,7 @@ export default function Login() {
           <p className="text-base text-secondary gap-2">
             <span className="pr-0.5">Belum punya akun?</span>
             <Link
-              to="javascript:void(0)"
+              to="/register"
               className="text-primary hover:underline">
               {" "}
               Sign Up

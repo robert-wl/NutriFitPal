@@ -2,13 +2,15 @@ import Layout from "../components/Layout.tsx";
 import { IoIosSearch, IoMdAdd } from "react-icons/io";
 import FoodCard from "../components/cards/FoodCard.tsx";
 import useAuth from "../hooks/use-auth.ts";
-import { useEffect, useRef, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import { AddFoodModal } from "../components/modals/AddFoodModal.tsx";
 import FoodService from "../services/FoodService.ts";
 import { Food } from "../models/firebase/food.ts";
+import { Nullable } from "../types/nullable.ts";
+import FoodCardSkeleton from "../components/skeletons/cards/FoodCardSkeleton.tsx";
 
 export default function Search() {
-  const [foods, setFoods] = useState<Food[]>([]);
+  const [foods, setFoods] = useState<Nullable<Food[]>>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const { user } = useAuth();
@@ -18,25 +20,26 @@ export default function Search() {
     setFoods(foodList);
   };
 
-  const openModal = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const openModal = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     dialogRef.current?.showModal();
   };
 
   const handleSearch = async () => {
+    setFoods(null);
     const search = inputRef.current?.value;
 
-    if (!search) {
+    if (!search || search === "") {
+      await handleGetFood();
       return;
     }
 
-    const response = await FoodService.getFoodByName(search);
-    console.log(response)
+    const response = await FoodService.getFoodByName(search.toLowerCase());
     setFoods(response);
   };
 
   useEffect(() => {
-    handleGetFood();
+    handleGetFood().then();
 
     const current = inputRef.current;
     current?.addEventListener("search", handleSearch);
@@ -72,12 +75,14 @@ export default function Search() {
               </button>
             )}
           </div>
-          {foods.map((food) => (
-            <FoodCard
-              food={food}
-              key={food.title}
-            />
-          ))}
+          {foods
+            ? foods.map((food) => (
+                <FoodCard
+                  food={food}
+                  key={food.title}
+                />
+              ))
+            : Array.from({ length: 10 }).map((_, index) => <FoodCardSkeleton key={index} />)}
         </div>
         <AddFoodModal
           ref={dialogRef}

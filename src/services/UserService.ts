@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "@firebase/auth";
-import { collection, doc, getDoc, getDocs, orderBy, query, setDoc } from "firebase/firestore";
-import { FirebaseResponse } from "../models/response.ts";
+import { collection, doc, getDoc, getDocs, limit, orderBy, query, setDoc } from "firebase/firestore";
+import { FirebaseResponse } from "../types/response.ts";
 import FirebaseService from "./FirebaseService";
 import { UserData } from "../models/firebase/user-data.ts";
 
@@ -20,7 +20,7 @@ export class UserService extends FirebaseService {
       const userData: UserData = {
         uid: authResponse.user.uid,
         email,
-        username,
+        username: username.toLowerCase(),
         dateOfBirth,
         height,
         weight,
@@ -133,7 +133,7 @@ export class UserService extends FirebaseService {
 
   public static async getAllUsers(): Promise<FirebaseResponse<UserData[]>> {
     try {
-      const collectionRef = query(collection(this.db, "users"), orderBy("role"));
+      const collectionRef = query(collection(this.db, "users"), orderBy("role"), limit(20));
 
       const response = await getDocs(collectionRef);
 
@@ -145,6 +145,29 @@ export class UserService extends FirebaseService {
 
       return {
         data,
+      };
+    } catch (err: any) {
+      console.warn(err);
+      return {
+        error: err.message,
+      };
+    }
+  }
+
+  public static async getUsersByName(name: string): Promise<FirebaseResponse<UserData[]>> {
+    try {
+      const collectionRef = query(collection(this.db, "users"), orderBy("username"), limit(20));
+
+      const response = await getDocs(collectionRef);
+
+      const data: UserData[] = [];
+
+      response.forEach((doc) => {
+        data.push(doc.data() as UserData);
+      });
+
+      return {
+        data: data.filter((user) => user.username.includes(name)),
       };
     } catch (err: any) {
       console.warn(err);

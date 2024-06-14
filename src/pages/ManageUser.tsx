@@ -4,10 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import UserCard from "../components/cards/UserCard.tsx";
 import { UserData } from "../models/firebase/user-data.ts";
 import { UserService } from "../services/UserService.ts";
+import { Nullable } from "../types/nullable.ts";
+import UserCardSkeleton from "../components/skeletons/cards/UserCardSkeleton.tsx";
 
 export default function ManageUser() {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [users, setUsers] = useState<UserData[]>([]);
+  const [users, setUsers] = useState<Nullable<UserData[]>>(null);
 
   const getUsers = async () => {
     const result = await UserService.getAllUsers();
@@ -15,8 +17,28 @@ export default function ManageUser() {
     setUsers(result.data ?? []);
   };
 
+  const handleSearch = async () => {
+    setUsers(null);
+    const search = inputRef.current?.value;
+
+    if (!search || search === "") {
+      getUsers().then();
+      return;
+    }
+
+    const response = await UserService.getUsersByName(search.toLowerCase());
+    setUsers(response.data ?? []);
+  };
+
   useEffect(() => {
-    getUsers();
+    getUsers().then();
+
+    const current = inputRef.current;
+    current?.addEventListener("search", handleSearch);
+
+    return () => {
+      current?.removeEventListener("search", handleSearch);
+    };
   }, []);
 
   return (
@@ -38,12 +60,15 @@ export default function ManageUser() {
             </div>
           </div>
           <div className="grid grid-cols-3 gap-5">
-            {users.map((user) => (
-              <UserCard
-                user={user}
-                key={user.username}
-              />
-            ))}
+            {users
+              ? users.map((user) => (
+                  <UserCard
+                    user={user}
+                    setUsers={setUsers}
+                    key={user.username}
+                  />
+                ))
+              : Array.from({ length: 25 }).map(() => <UserCardSkeleton />)}
           </div>
         </div>
       </Layout>
